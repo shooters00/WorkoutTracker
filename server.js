@@ -9,9 +9,6 @@ const db = require("./models");
 
 const app = express();
 
-//require("./routes/apiRoutes")(app);
-//require("./routes/htmlRoutes")(app);
-
 app.use(logger("dev"));
 
 app.use(express.urlencoded({ extended: true }));
@@ -45,6 +42,7 @@ app.post("/api/workouts", ({body}, res) => {
     .then(({_id}) => db.Workout.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
     .then(dbWorkout => {
       res.json(dbWorkout);
+      console.log("Workout created");
     })
     .catch(err => {
       res.json(err);
@@ -62,7 +60,19 @@ app.post("/api/workouts/:id", ({body}, res) => {
   });
 
 app.get("/api/workouts/range", (req, res) => {
-  db.Workout.find({})
+
+  db.Workout.aggregate(
+    [
+      {
+        $addFields: {
+          totalDuration: { $sum: "$exercises.duration"},
+          dateDifference: {
+            $subtract: [new Date(), "$day"],
+          },
+        }
+      },
+    ],
+  )
   .then(dbWorkout => {
     res.json(dbWorkout);
   })
