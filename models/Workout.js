@@ -9,23 +9,24 @@ const workoutSchema = new Schema({
   },
   exercises: [
     {
-      type: String,
+      type: {
+        type: String
+      },
       name: String,
       duration: Number,
       weight: Number,
       reps: Number,
       sets: Number,
       distance: Number
-    }
-  ]
+    },
+  ],
 },
 {
-  toJSON: {virtuals: true}
+ toJSON: {virtuals: true}
 }
 );
 
 workoutSchema.virtual("totalDuration").get(function () {
-  console.log(this.exercises);
   return this.exercises.reduce((total, exercise) => {
       console.log(total);
       console.log(exercise.duration);

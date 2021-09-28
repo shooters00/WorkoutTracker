@@ -18,6 +18,7 @@ app.use(express.static("public"));
 
 mongoose.connect(
   process.env.MONGODB_URI || 'mongodb://localhost/whispering-coast-55644',
+  //process.env.MONGODB_URI || 'mongodb://localhost/workout',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -34,15 +35,6 @@ app.get("/stats", (req, res) => {
   res.sendFile(path.join(__dirname + "/public/stats.html"))
 });
 
-app.get("/api/workouts", (req, res) => {
-  db.Workout.find({})
-  .then(dbWorkout => {
-    res.json(dbWorkout);
-  })
-  .catch(err => {
-    res.json(err);
-  });
-});
 
 app.post("/api/workouts", ({body}, res) => {
   db.Workout.create(body)
@@ -51,23 +43,31 @@ app.post("/api/workouts", ({body}, res) => {
       console.log("Workout created");
     })
     .catch(err => {
-      res.json(err);
+      res.status(500).json(err);
     });
 });
 
 app.put("/api/workouts/:id", ({body, params}, res) => {
-  console.log(body, params);
-  db.Workout.findByIdAndUpdate({ _id: params.id }, { $push: { exercises: body } }, { new: true })
+  db.Workout.findByIdAndUpdate(params.id, { $push: {exercises: body} }, { new: true })
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
     .catch(err => {
-      res.json(err);
+      res.status(500).json(err);
     });
+});
+
+app.get("/api/workouts", (req, res) => {
+  db.Workout.find({})
+  .then(dbWorkout => {
+    res.json(dbWorkout);
+  })
+  .catch(err => {
+    res.status(500).json(err);
   });
+});
 
 app.get("/api/workouts/range", (req, res) => {
-
   db.Workout.aggregate(
     [
       {
@@ -85,7 +85,7 @@ app.get("/api/workouts/range", (req, res) => {
     res.json(dbWorkout);
   })
   .catch(err => {
-    res.json(err);
+    res.status(500).json(err);
   });
 });
 
