@@ -3,7 +3,7 @@ const logger = require("morgan");
 const path = require("path");
 const mongoose = require("mongoose");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 const db = require("./models");
 
@@ -80,7 +80,8 @@ app.get("/api/workouts/range", (req, res) => {
       },
     ],
   )
-  //Sort and then limit
+  .sort({day: -1})
+  .limit(7)
   .then(dbWorkout => {
     res.json(dbWorkout);
   })
