@@ -5,6 +5,8 @@
 ## Description
 Create and track daily workouts.  Log multiple exercises in a workout on a given day.  Track the name, type, weight, sets, reps, and duration of exercise.
 
+![Fitness Tracker](https://user-images.githubusercontent.com/80861572/136468906-3016f343-6fc8-45cc-baac-a48e3e2ae10f.png)
+
 #### Table of Contents
 1. [Installation](#installation)
 2. [Usage](#usage)
